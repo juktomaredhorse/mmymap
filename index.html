@@ -2,690 +2,683 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>내 결혼 상대 결정하기 💍</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내 결혼 상대 결정하기 💗</title>
 
-  <style>
-    * { box-sizing: border-box; }
+<style>
+:root {
+  --pink: #e94f86;
+  --dark-pink: #c73570;
+  --light-pink: #fff0f6;
+  --border: #f2cbdc;
+  --text: #392b36;
+  --muted: #887985;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, "Malgun Gothic", sans-serif;
-      color: #292929;
-    }
+* { box-sizing: border-box; }
 
-    .container {
-      display: flex;
-      width: 100%;
-      height: 100vh;
-    }
+body {
+  margin: 0;
+  font-family: Arial, "Malgun Gothic", sans-serif;
+  color: var(--text);
+  background: linear-gradient(135deg, #fff0f6, #fff9fc);
+}
 
-    .sidebar {
-      width: 410px;
-      min-width: 340px;
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid #e5e5e5;
-      background: #fff;
-      z-index: 1;
-    }
+.container {
+  display: flex;
+  height: 100vh;
+  padding: 16px;
+  gap: 16px;
+}
 
-    h1 {
-      font-size: 24px;
-      margin: 0 0 8px;
-    }
+.sidebar {
+  width: 390px;
+  min-width: 330px;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px #d85b8712;
+}
 
-    .description {
-      color: #777;
-      font-size: 13px;
-      line-height: 1.6;
-      margin: 0 0 18px;
-    }
+.header { padding: 22px 20px 14px; }
 
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 18px;
-    }
+h1 {
+  font-size: 23px;
+  margin: 0 0 9px;
+  color: var(--dark-pink);
+}
 
-    .tab {
-      flex: 1;
-      padding: 12px 6px;
-      border: 1px solid #ddd;
-      border-radius: 9px;
-      background: white;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: bold;
-    }
+.description {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
 
-    .tab.active {
-      background: #2878ff;
-      color: white;
-      border-color: #2878ff;
-    }
+.controls { padding: 0 16px 12px; }
 
-    .region-label {
-      font-size: 13px;
-      font-weight: bold;
-      margin-bottom: 7px;
-    }
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
 
-    #regionInput, #searchInput {
-      width: 100%;
-      min-width: 0;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-      outline: none;
-    }
+.tab {
+  flex: 1;
+  padding: 12px 5px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: white;
+  color: #76566a;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-    #regionInput:focus, #searchInput:focus {
-      border-color: #2878ff;
-    }
+.tab.active {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: white;
+}
 
-    .search-form {
-      display: flex;
-      gap: 8px;
-      margin-top: 9px;
-    }
+#searchInput {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  font-size: 14px;
+  outline: none;
+  background: #fffafd;
+}
 
-    #searchInput {
-      flex: 1;
-    }
+#searchInput:focus {
+  border-color: var(--pink);
+}
 
-    #searchButton {
-      padding: 0 17px;
-      border: 0;
-      border-radius: 8px;
-      background: #2878ff;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
+#searchButton, #locationButton {
+  width: 100%;
+  margin-top: 9px;
+  padding: 13px;
+  border-radius: 11px;
+  cursor: pointer;
+  font-size: 14px;
+}
 
-    #locationButton {
-      margin-top: 9px;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      background: white;
-      cursor: pointer;
-    }
+#searchButton {
+  border: 0;
+  background: var(--pink);
+  color: white;
+  font-weight: bold;
+}
 
-    button:disabled {
-      opacity: 0.55;
-      cursor: wait;
-    }
+#searchButton:hover { background: var(--dark-pink); }
 
-    #status {
-      margin: 17px 0 8px;
-      color: #666;
-      font-size: 13px;
-      line-height: 1.5;
-    }
+#locationButton {
+  background: white;
+  border: 1px solid var(--border);
+  color: #76566a;
+}
 
-    #resultList {
-      flex: 1;
-      overflow-y: auto;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
 
-    .place-item {
-      padding: 15px 5px;
-      border-bottom: 1px solid #eee;
-      cursor: pointer;
-    }
+#status {
+  margin: 7px 16px 12px;
+  padding: 12px;
+  border-radius: 11px;
+  background: var(--light-pink);
+  color: var(--dark-pink);
+  font-size: 13px;
+  line-height: 1.5;
+}
 
-    .place-item:hover {
-      background: #f6f8ff;
-    }
+.results-heading {
+  display: flex;
+  justify-content: space-between;
+  padding: 13px 18px;
+  background: #fffafd;
+  border-top: 1px solid #f7e2ec;
+  border-bottom: 1px solid #f7e2ec;
+  font-weight: bold;
+}
 
-    .place-name {
-      font-size: 15px;
-      font-weight: bold;
-      margin-bottom: 7px;
-    }
+#resultCount {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: normal;
+}
 
-    .place-address {
-      color: #777;
-      font-size: 12px;
-      line-height: 1.5;
-    }
+#resultList {
+  flex: 1;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-    .place-phone {
-      color: #666;
-      font-size: 12px;
-      margin-top: 6px;
-    }
+.place-item {
+  padding: 15px 18px;
+  border-bottom: 1px solid #f6e7ee;
+  cursor: pointer;
+}
 
-    .place-link {
-      display: inline-block;
-      margin-top: 8px;
-      color: #2878ff;
-      font-size: 12px;
-      text-decoration: none;
-    }
+.place-item:hover { background: #fff4f8; }
 
-    #map {
-      flex: 1;
-      min-width: 0;
-      height: 100%;
-      background: #f1f3f5;
-    }
+.place-name {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 7px;
+}
 
-    @media (max-width: 650px) {
-      .container {
-        flex-direction: column;
-      }
+.place-address {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
 
-      .sidebar {
-        width: 100%;
-        min-width: 0;
-        height: 53%;
-        padding: 15px;
-      }
+.place-phone {
+  color: #806a78;
+  font-size: 12px;
+  margin-top: 6px;
+}
 
-      #map {
-        width: 100%;
-        height: 47%;
-      }
-    }
-  </style>
+.place-link {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--dark-pink);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.empty-state {
+  padding: 30px 18px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+#map {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff7fb;
+}
+
+@media (max-width: 700px) {
+  .container {
+    height: auto;
+    min-height: 100vh;
+    flex-direction: column;
+    padding: 10px;
+  }
+  .sidebar {
+    width: 100%;
+    min-width: 0;
+    height: 58vh;
+  }
+  #map {
+    flex: none;
+    width: 100%;
+    height: 42vh;
+    min-height: 300px;
+  }
+}
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <aside class="sidebar">
-      <h1>내 결혼 상대 결정하기 💍</h1>
+<div class="container">
+
+  <aside class="sidebar">
+    <div class="header">
+      <h1>내 결혼 상대 결정하기 💗</h1>
       <p class="description">
-        결혼정보회사와 재혼 전문 업체를 검색하고
+        결혼정보회사와 재혼 전문 업체를 검색하고<br>
         지도에서 위치를 확인해 보세요.
       </p>
+    </div>
 
+    <div class="controls">
       <div class="tabs">
         <button type="button" class="tab active" id="generalTab">
-          결혼정보회사
+          ♥ 결혼정보회사
         </button>
         <button type="button" class="tab" id="remarriageTab">
-          재혼 전문 업체
+          ♥ 재혼 전문 업체
         </button>
       </div>
 
-      <label class="region-label" for="regionInput">
-        검색 지역 (선택)
-      </label>
-      <input
-        id="regionInput"
-        type="text"
-        placeholder="예: 부산 해운대구, 고양시 일산동구"
-      >
-
-      <form class="search-form" id="searchForm">
+      <form id="searchForm">
         <input
           id="searchInput"
           type="text"
-          placeholder="검색어 입력"
-          aria-label="검색어"
+          placeholder="예: 강남구, 부산 해운대구"
+          aria-label="지역 또는 업체 검색"
         >
-        <button type="submit" id="searchButton">검색</button>
+        <button type="submit" id="searchButton">⌕ 검색</button>
       </form>
 
       <button type="button" id="locationButton">
-        현재 위치 사용하기
+        ♥ 현재 위치로 이동
       </button>
+    </div>
 
-      <p id="status" role="status" aria-live="polite">
-        지도를 불러오는 중입니다.
-      </p>
+    <p id="status" role="status" aria-live="polite">
+      카카오맵을 불러오는 중입니다.
+    </p>
 
-      <ul id="resultList"></ul>
-    </aside>
+    <div class="results-heading">
+      <span>검색 결과</span>
+      <span id="resultCount">총 0개</span>
+    </div>
 
-    <main id="map" aria-label="결혼정보회사 지도"></main>
-  </div>
+    <ul id="resultList">
+      <li class="empty-state">
+        지역이나 검색어를 입력한 후 검색해 보세요.
+      </li>
+    </ul>
+  </aside>
 
-  <script>
-    // 카카오 JavaScript 키
-    const KAKAO_APP_KEY = "f38811e47209589c76ef3002c7c95204";
+  <main id="map" aria-label="결혼정보회사 지도"></main>
+</div>
 
-    let map;
-    let placesService;
-    let geocoder;
-    let infoWindow;
-    let markers = [];
-    let currentPosition = null;
-    let activeType = "general";
-    let searchSequence = 0;
+<script>
+const KAKAO_APP_KEY = "f38811e47209589c76ef3002c7c95204";
 
-    const regionInput = document.getElementById("regionInput");
-    const searchInput = document.getElementById("searchInput");
-    const searchForm = document.getElementById("searchForm");
-    const searchButton = document.getElementById("searchButton");
-    const locationButton = document.getElementById("locationButton");
-    const resultList = document.getElementById("resultList");
-    const statusText = document.getElementById("status");
-    const generalTab = document.getElementById("generalTab");
-    const remarriageTab = document.getElementById("remarriageTab");
+let map;
+let placesService;
+let geocoder;
+let infoWindow;
+let markers = [];
+let currentPosition = null;
+let activeType = "general";
+let searchSequence = 0;
 
-    // 탭별 검색어를 완전히 분리
-    const searchKeywords = {
-      general: [
-        "결혼정보회사",
-        "결혼정보업체",
-        "결혼정보사"
-      ],
-      remarriage: [
-        "재혼정보회사",
-        "재혼전문",
-        "재혼정보",
-        "재혼 전문 결혼정보회사"
-      ]
-    };
+const searchInput = document.getElementById("searchInput");
+const searchForm = document.getElementById("searchForm");
+const searchButton = document.getElementById("searchButton");
+const locationButton = document.getElementById("locationButton");
+const resultList = document.getElementById("resultList");
+const resultCount = document.getElementById("resultCount");
+const statusText = document.getElementById("status");
+const generalTab = document.getElementById("generalTab");
+const remarriageTab = document.getElementById("remarriageTab");
 
-    function setStatus(message) {
-      statusText.textContent = message;
+const keywords = {
+  general: ["결혼정보회사", "결혼정보업체", "결혼정보사"],
+  remarriage: ["재혼정보회사", "재혼전문", "재혼정보"]
+};
+
+function setStatus(message) {
+  statusText.textContent = message;
+}
+
+function showSdkError() {
+  setStatus(
+    "카카오맵을 불러오지 못했습니다. JavaScript 키와 사이트 도메인 설정을 확인해 주세요."
+  );
+}
+
+function loadKakaoSdk() {
+  setStatus("카카오맵을 불러오는 중입니다.");
+
+  const script = document.createElement("script");
+  script.src =
+    "https://dapi.kakao.com/v2/maps/sdk.js?appkey=" +
+    encodeURIComponent(KAKAO_APP_KEY) +
+    "&libraries=services&autoload=false";
+
+  script.onload = function () {
+    if (!window.kakao || !window.kakao.maps) {
+      showSdkError();
+      return;
     }
 
-    function showSdkError() {
-      setStatus(
-        "카카오맵을 불러오지 못했습니다. JavaScript 키와 사이트 도메인 설정을 확인해 주세요."
+    kakao.maps.load(function () {
+      initializeMap();
+    });
+  };
+
+  script.onerror = showSdkError;
+  document.head.appendChild(script);
+}
+
+function initializeMap() {
+  const center = new kakao.maps.LatLng(37.5665, 126.9780);
+
+  map = new kakao.maps.Map(
+    document.getElementById("map"),
+    {
+      center: center,
+      level: 6
+    }
+  );
+
+  placesService = new kakao.maps.services.Places();
+  geocoder = new kakao.maps.services.Geocoder();
+  infoWindow = new kakao.maps.InfoWindow({ zIndex: 10 });
+
+  setStatus("지역이나 업체명을 입력해 검색해 보세요.");
+}
+
+function showEmpty(message) {
+  const item = document.createElement("li");
+  item.className = "empty-state";
+  item.textContent = message;
+  resultList.replaceChildren(item);
+}
+
+function clearMarkers() {
+  markers.forEach(function (marker) {
+    marker.setMap(null);
+  });
+
+  markers = [];
+
+  if (infoWindow) infoWindow.close();
+}
+
+function switchTab(type) {
+  activeType = type;
+
+  generalTab.classList.toggle("active", type === "general");
+  remarriageTab.classList.toggle("active", type === "remarriage");
+
+  searchInput.value = "";
+  searchInput.placeholder = type === "general"
+    ? "예: 강남구, 부산 해운대구, 결혼정보회사"
+    : "예: 강남구 재혼, 부산 재혼정보회사";
+
+  resultList.replaceChildren();
+  resultCount.textContent = "총 0개";
+  clearMarkers();
+
+  setStatus(type === "general"
+    ? "결혼정보회사 탭입니다."
+    : "재혼 전문 업체 탭입니다.");
+
+  showEmpty("검색어를 입력한 후 검색해 보세요.");
+}
+
+generalTab.addEventListener("click", function () {
+  switchTab("general");
+});
+
+remarriageTab.addEventListener("click", function () {
+  switchTab("remarriage");
+});
+
+locationButton.addEventListener("click", function () {
+  if (!map) {
+    setStatus("지도가 아직 준비되지 않았습니다.");
+    return;
+  }
+
+  if (!navigator.geolocation) {
+    setStatus("브라우저에서 현재 위치를 지원하지 않습니다.");
+    return;
+  }
+
+  setStatus("현재 위치를 확인하고 있습니다.");
+
+  navigator.geolocation.getCurrentPosition(
+    function (position) {
+      currentPosition = new kakao.maps.LatLng(
+        position.coords.latitude,
+        position.coords.longitude
       );
+
+      map.setCenter(currentPosition);
+      map.setLevel(5);
+      setStatus("현재 위치로 이동했습니다.");
+    },
+    function () {
+      setStatus("위치 권한을 확인해 주세요. 지역을 직접 검색할 수도 있습니다.");
+    },
+    {
+      enableHighAccuracy: false,
+      timeout: 10000,
+      maximumAge: 60000
     }
+  );
+});
 
-    function initializeMap() {
-      if (!window.kakao || !window.kakao.maps) {
-        showSdkError();
-        return;
-      }
+searchForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+  searchPlaces();
+});
 
-      kakao.maps.load(function () {
-        const center = new kakao.maps.LatLng(37.5665, 126.9780);
+function searchPlaces() {
+  if (!map || !placesService) {
+    setStatus("지도가 아직 준비되지 않았습니다. 잠시 후 다시 시도해 주세요.");
+    return;
+  }
 
-        map = new kakao.maps.Map(
-          document.getElementById("map"),
-          {
-            center: center,
-            level: 5
-          }
-        );
+  const query = searchInput.value.trim();
 
-        placesService = new kakao.maps.services.Places();
-        geocoder = new kakao.maps.services.Geocoder();
-        infoWindow = new kakao.maps.InfoWindow({ zIndex: 10 });
+  if (!query) {
+    setStatus("지역이나 검색어를 입력해 주세요.");
+    searchInput.focus();
+    return;
+  }
 
-        setStatus("지역과 검색어를 입력해 주세요.");
+  const sequence = ++searchSequence;
+  const collected = new Map();
+  const isCompanyQuery =
+    /결혼정보|결혼정보회사|결혼정보업체|결혼정보사|재혼/.test(query);
 
-        // 자동 위치 요청이 거부되어도 검색 기능은 사용할 수 있음
-        requestCurrentLocation(false);
+  let terms = [];
+
+  if (activeType === "general") {
+    if (isCompanyQuery) {
+      terms = [query];
+    } else {
+      terms = keywords.general.map(function (word) {
+        return query + " " + word;
       });
     }
-
-    // SDK를 동적으로 불러와 로드 완료 후 지도 초기화
-    function loadKakaoSdk() {
-      setStatus("카카오맵을 불러오는 중입니다.");
-
-      const script = document.createElement("script");
-      script.src =
-        "https://dapi.kakao.com/v2/maps/sdk.js?appkey=" +
-        encodeURIComponent(KAKAO_APP_KEY) +
-        "&libraries=services&autoload=false";
-
-      script.onload = function () {
-        if (window.kakao && window.kakao.maps) {
-          initializeMap();
-        } else {
-          showSdkError();
-        }
-      };
-
-      script.onerror = function () {
-        showSdkError();
-      };
-
-      document.head.appendChild(script);
-    }
-
-    function requestCurrentLocation(showMessage) {
-      if (!navigator.geolocation) {
-        if (showMessage) {
-          setStatus("브라우저에서 현재 위치 기능을 지원하지 않습니다.");
-        }
-        return;
+  } else {
+    if (/재혼/.test(query)) {
+      terms = [query];
+      if (!/재혼정보회사/.test(query)) {
+        terms.push(query + " 재혼정보회사");
       }
-
-      if (showMessage) {
-        setStatus("현재 위치를 확인하고 있습니다.");
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        function (position) {
-          currentPosition = new kakao.maps.LatLng(
-            position.coords.latitude,
-            position.coords.longitude
-          );
-
-          map.setCenter(currentPosition);
-          map.setLevel(5);
-
-          if (showMessage) {
-            setStatus("현재 위치로 이동했습니다. 검색어를 입력해 주세요.");
-          }
-        },
-        function () {
-          if (showMessage) {
-            setStatus(
-              "현재 위치를 가져오지 못했습니다. 지역을 직접 입력해 검색해 주세요."
-            );
-          }
-        },
-        {
-          enableHighAccuracy: false,
-          timeout: 10000,
-          maximumAge: 60000
-        }
-      );
-    }
-
-    function clearMarkers() {
-      markers.forEach(function (marker) {
-        marker.setMap(null);
+    } else {
+      terms = keywords.remarriage.map(function (word) {
+        return query + " " + word;
       });
+    }
+  }
 
-      markers = [];
+  terms = [...new Set(terms)];
 
-      if (infoWindow) {
-        infoWindow.close();
-      }
+  searchButton.disabled = true;
+  resultList.replaceChildren();
+  resultCount.textContent = "검색 중…";
+  clearMarkers();
+  setStatus("업체를 검색하고 있습니다.");
+
+  const tasks = [];
+
+  terms.forEach(function (term) {
+    [1, 2].forEach(function (page) {
+      tasks.push({ term: term, page: page });
+    });
+  });
+
+  let finished = 0;
+
+  tasks.forEach(function (task) {
+    const options = { page: task.page, size: 15 };
+
+    if (currentPosition && !isCompanyQuery) {
+      options.location = currentPosition;
+      options.radius = 20000;
     }
 
-    function switchTab(type) {
-      activeType = type;
-
-      generalTab.classList.toggle("active", type === "general");
-      remarriageTab.classList.toggle("active", type === "remarriage");
-
-      searchInput.value = "";
-      resultList.replaceChildren();
-      clearMarkers();
-
-      if (type === "general") {
-        searchInput.placeholder = "결혼정보회사 검색";
-        setStatus("결혼정보회사 탭입니다. 지역과 검색어를 입력해 주세요.");
-      } else {
-        searchInput.placeholder = "재혼 전문 업체 검색";
-        setStatus("재혼 전문 업체 탭입니다. 재혼 관련 업체만 검색합니다.");
-      }
-    }
-
-    generalTab.addEventListener("click", function () {
-      switchTab("general");
-    });
-
-    remarriageTab.addEventListener("click", function () {
-      switchTab("remarriage");
-    });
-
-    locationButton.addEventListener("click", function () {
-      requestCurrentLocation(true);
-    });
-
-    searchForm.addEventListener("submit", function (event) {
-      event.preventDefault();
-      searchPlaces();
-    });
-
-    // 지역명을 좌표로 바꾸고 검색
-    function searchPlaces() {
-      const sequence = ++searchSequence;
-      const region = regionInput.value.trim();
-      const extraKeyword = searchInput.value.trim();
-      const keywords = searchKeywords[activeType].slice();
-
-      if (extraKeyword) {
-        // 재혼 탭에서는 사용자가 입력한 일반 검색어가
-        // 일반 업체 검색으로 바뀌지 않도록 재혼 관련 표현을 유지
-        if (activeType === "remarriage") {
-          keywords.unshift(
-            extraKeyword.includes("재혼")
-              ? extraKeyword
-              : "재혼 " + extraKeyword
-          );
-        } else {
-          keywords.unshift(extraKeyword);
-        }
-      }
-
-      searchButton.disabled = true;
-      resultList.replaceChildren();
-      clearMarkers();
-      setStatus("업체를 검색하고 있습니다.");
-
-      if (!region) {
-        runSearches(
-          keywords,
-          currentPosition,
-          sequence
-        );
-        return;
-      }
-
-      geocoder.addressSearch(region, function (data, status) {
+    placesService.keywordSearch(
+      task.term,
+      function (data, status) {
         if (sequence !== searchSequence) return;
 
-        if (status === kakao.maps.services.Status.OK && data.length) {
-          const center = new kakao.maps.LatLng(data[0].y, data[0].x);
+        if (status === kakao.maps.services.Status.OK) {
+          data.forEach(function (place) {
+            if (activeType === "remarriage") {
+              const text = [
+                place.place_name || "",
+                place.category_name || "",
+                place.address_name || "",
+                place.road_address_name || ""
+              ].join(" ");
 
-          map.setCenter(center);
-          runSearches(keywords, center, sequence);
-        } else {
-          // 지오코딩이 실패해도 지역명을 포함한 키워드 검색 시도
-          const regionalKeywords = keywords.map(function (keyword) {
-            return region + " " + keyword;
-          });
-
-          runSearches(
-            regionalKeywords,
-            null,
-            sequence
-          );
-        }
-      });
-    }
-
-    // 각 검색어를 여러 페이지까지 조회
-    function runSearches(keywords, center, sequence) {
-      const tasks = [];
-
-      keywords.forEach(function (keyword) {
-        for (let page = 1; page <= 3; page++) {
-          tasks.push({
-            keyword: keyword,
-            page: page
-          });
-        }
-      });
-
-      let finished = 0;
-      const collected = new Map();
-
-      function finishOne() {
-        finished++;
-
-        if (sequence !== searchSequence) return;
-
-        if (finished === tasks.length) {
-          const results = Array.from(collected.values());
-
-          searchButton.disabled = false;
-
-          if (results.length === 0) {
-            resultList.replaceChildren();
-            setStatus(
-              activeType === "remarriage"
-                ? "재혼 관련 검색 결과가 없습니다. 다른 지역이나 검색어를 입력해 주세요."
-                : "검색 결과가 없습니다. 다른 지역이나 검색어를 입력해 주세요."
-            );
-            return;
-          }
-
-          displayResults(results);
-
-          setStatus(
-            "검색 결과 " + results.length +
-            "개를 표시합니다. 지도 데이터에 따라 결과 수가 달라질 수 있습니다."
-          );
-        }
-      }
-
-      tasks.forEach(function (task) {
-        const options = { page: task.page, size: 15 };
-
-        if (center) {
-          options.location = center;
-          options.radius = 20000;
-        }
-
-        placesService.keywordSearch(
-          task.keyword,
-          function (data, status) {
-            if (sequence !== searchSequence) return;
-
-            if (status === kakao.maps.services.Status.OK) {
-              data.forEach(function (place) {
-                // 재혼 탭에서 일반 업체 검색 결과를 무작정 표시하지 않음
-                if (activeType === "remarriage") {
-                  const searchable =
-                    (place.place_name + " " +
-                     place.category_name + " " +
-                     (place.address_name || "")).toLowerCase();
-
-                  const isRemarriageRelated =
-                    /재혼|재혼정보|재혼전문/.test(searchable);
-
-                  if (!isRemarriageRelated) return;
-                }
-
-                const key = place.id || (
-                  place.place_name + "|" +
-                  place.x + "|" + place.y
-                );
-
-                if (!collected.has(key)) {
-                  collected.set(key, place);
-                }
-              });
+              // 재혼 관련 표현이 있는 결과만 표시
+              if (!/재혼/.test(text)) return;
             }
 
-            finishOne();
-          },
-          options
-        );
-      });
-    }
+            const key = place.id ||
+              (place.place_name + "|" + place.x + "|" + place.y);
 
-    function displayResults(places) {
-      const bounds = new kakao.maps.LatLngBounds();
-      resultList.replaceChildren();
-      clearMarkers();
-
-      places.forEach(function (place, index) {
-        const position = new kakao.maps.LatLng(
-          Number(place.y),
-          Number(place.x)
-        );
-
-        bounds.extend(position);
-
-        const marker = new kakao.maps.Marker({
-          map: map,
-          position: position
-        });
-
-        markers.push(marker);
-
-        kakao.maps.event.addListener(marker, "click", function () {
-          showPlaceInfo(place, marker);
-        });
-
-        const item = document.createElement("li");
-        item.className = "place-item";
-
-        const name = document.createElement("div");
-        name.className = "place-name";
-        name.textContent = (index + 1) + ". " + place.place_name;
-
-        const address = document.createElement("div");
-        address.className = "place-address";
-        address.textContent =
-          place.road_address_name ||
-          place.address_name ||
-          "주소 정보 없음";
-
-        item.append(name, address);
-
-        if (place.phone) {
-          const phone = document.createElement("div");
-          phone.className = "place-phone";
-          phone.textContent = place.phone;
-          item.appendChild(phone);
+            if (!collected.has(key)) {
+              collected.set(key, place);
+            }
+          });
         }
 
-        if (place.place_url) {
-          const link = document.createElement("a");
-          link.className = "place-link";
-          link.href = place.place_url;
-          link.target = "_blank";
-          link.rel = "noopener noreferrer";
-          link.textContent = "카카오맵에서 보기";
-          item.appendChild(link);
+        finished++;
+
+        if (finished === tasks.length) {
+          finishSearch();
         }
+      },
+      options
+    );
+  });
 
-        item.addEventListener("click", function (event) {
-          if (event.target.closest("a")) return;
+  function finishSearch() {
+    if (sequence !== searchSequence) return;
 
-          map.panTo(position);
-          showPlaceInfo(place, marker);
-        });
+    searchButton.disabled = false;
+    const results = Array.from(collected.values());
 
-        resultList.appendChild(item);
-      });
+    resultCount.textContent = "총 " + results.length + "개";
 
-      if (places.length > 0) {
-        map.setBounds(bounds);
-      }
+    if (!results.length) {
+      setStatus(activeType === "remarriage"
+        ? "재혼 관련 검색 결과가 없습니다. 다른 지역이나 검색어를 입력해 보세요."
+        : "검색 결과가 없습니다. 다른 검색어를 입력해 보세요.");
+
+      showEmpty("검색 결과가 없습니다.");
+      return;
     }
 
-    function showPlaceInfo(place, marker) {
-      const content = document.createElement("div");
-      content.style.padding = "10px";
-      content.style.maxWidth = "230px";
-      content.style.fontSize = "13px";
+    displayResults(results);
+    setStatus("검색 결과 " + results.length + "개를 표시합니다.");
+  }
+}
 
-      const name = document.createElement("strong");
-      name.textContent = place.place_name;
+function displayResults(places) {
+  const bounds = new kakao.maps.LatLngBounds();
 
-      const address = document.createElement("div");
-      address.style.marginTop = "6px";
-      address.textContent =
-        place.road_address_name ||
-        place.address_name ||
-        "주소 정보 없음";
+  resultList.replaceChildren();
+  clearMarkers();
 
-      content.append(name, address);
+  places.forEach(function (place, index) {
+    const position = new kakao.maps.LatLng(
+      Number(place.y),
+      Number(place.x)
+    );
 
-      infoWindow.close();
-      infoWindow.setContent(content);
-      infoWindow.open(map, marker);
+    bounds.extend(position);
+
+    const marker = new kakao.maps.Marker({
+      map: map,
+      position: position
+    });
+
+    markers.push(marker);
+
+    kakao.maps.event.addListener(marker, "click", function () {
+      showPlaceInfo(place, marker);
+    });
+
+    const item = document.createElement("li");
+    item.className = "place-item";
+
+    const name = document.createElement("div");
+    name.className = "place-name";
+    name.textContent = (index + 1) + ". " + place.place_name;
+
+    const address = document.createElement("div");
+    address.className = "place-address";
+    address.textContent =
+      place.road_address_name ||
+      place.address_name ||
+      "주소 정보 없음";
+
+    item.append(name, address);
+
+    if (place.phone) {
+      const phone = document.createElement("div");
+      phone.className = "place-phone";
+      phone.textContent = place.phone;
+      item.appendChild(phone);
     }
 
-    // 모든 기능을 준비한 뒤 SDK를 불러옴
-    loadKakaoSdk();
-  </script>
+    if (place.place_url) {
+      const link = document.createElement("a");
+      link.className = "place-link";
+      link.href = place.place_url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "카카오맵에서 보기";
+      item.appendChild(link);
+    }
+
+    item.addEventListener("click", function (event) {
+      if (event.target.closest("a")) return;
+
+      map.panTo(position);
+      showPlaceInfo(place, marker);
+    });
+
+    resultList.appendChild(item);
+  });
+
+  if (places.length) map.setBounds(bounds);
+}
+
+function showPlaceInfo(place, marker) {
+  const content = document.createElement("div");
+  content.style.cssText =
+    "padding:10px;max-width:230px;font-size:13px;";
+
+  const name = document.createElement("strong");
+  name.textContent = place.place_name;
+
+  const address = document.createElement("div");
+  address.style.marginTop = "6px";
+  address.textContent =
+    place.road_address_name ||
+    place.address_name ||
+    "주소 정보 없음";
+
+  content.append(name, address);
+
+  infoWindow.close();
+  infoWindow.setContent(content);
+  infoWindow.open(map, marker);
+}
+
+loadKakaoSdk();
+</script>
 </body>
 </html>
